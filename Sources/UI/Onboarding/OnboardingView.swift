@@ -285,7 +285,6 @@ struct OnboardingView: View {
     private func providerDescription(for id: String) -> String {
         switch id {
         case "openai": String(localized: "OpenAI-compatible API, requires API Key")
-        case "openrouter": String(localized: "Unified API for 200+ models, requires API Key")
         case "google": String(localized: "Free, no API key needed.")
         case "apple": String(localized: "Built-in system translation, no API Key needed (macOS 15+)")
         default: ""

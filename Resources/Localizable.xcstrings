@@ -68,6 +68,7 @@
       }
     },
     "Access Token" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -140,9 +141,6 @@
         }
       }
     },
-    "Anthropic API requires max_tokens. Default: 4096." : {
-
-    },
     "API Configuration" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -178,9 +176,6 @@
           }
         }
       }
-    },
-    "App ID" : {
-
     },
     "App Language" : {
       "extractionState" : "stale",
@@ -635,6 +630,7 @@
       }
     },
     "Endpoint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -683,16 +679,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "字体大小：%lld"
-          }
-        }
-      }
-    },
-    "For api.deeplx.org, include your API key in the URL.\nFor self-hosted: `http://localhost:1188`\nDo not include /translate path suffix." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 api.deeplx.org 时，请在 URL 中包含您的 API Key。\n自托管示例：`http://localhost:1188`\n请勿在 URL 末尾附加 /translate 路径。"
           }
         }
       }
@@ -762,39 +748,6 @@
         }
       }
     },
-    "Get a free API key at deepl.com" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 deepl.com 获取免费 API Key"
-          }
-        }
-      }
-    },
-    "Get a token at platform.caiyunapp.com" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 platform.caiyunapp.com 获取令牌"
-          }
-        }
-      }
-    },
-    "Get an API key at niutrans.com" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 niutrans.com 获取 API Key"
-          }
-        }
-      }
-    },
     "Get API Key from %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -802,17 +755,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "从 %@ 获取 API Key"
-          }
-        }
-      }
-    },
-    "Get credentials at api.fanyi.baidu.com" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 api.fanyi.baidu.com 获取凭证"
           }
         }
       }
@@ -991,17 +933,6 @@
         }
       }
     },
-    "Learn more about DeepLX" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "了解更多关于 DeepLX"
-          }
-        }
-      }
-    },
     "Licensed under AGPL-3.0" : {
 
     },
@@ -1047,9 +978,6 @@
           }
         }
       }
-    },
-    "Max Tokens" : {
-
     },
     "Menu Bar Translation Tool" : {
       "localizations" : {
@@ -1426,16 +1354,6 @@
         }
       }
     },
-    "Protects your self-hosted DeepLX server. Set via `--token` flag or `TOKEN` environment variable." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保护您的自托管 DeepLX 服务器。通过 `--token` 标志或 `TOKEN` 环境变量设置。"
-          }
-        }
-      }
-    },
     "Provider Display Order" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1609,9 +1527,6 @@
         }
       }
     },
-    "Secret Key" : {
-
-    },
     "Select a model" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1709,6 +1624,7 @@
       }
     },
     "Server URL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1774,6 +1690,7 @@
       }
     },
     "Simulates DeepL iOS client. No authentication required. Rate limits (HTTP 429) may apply." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1978,6 +1895,7 @@
       }
     },
     "Token" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2019,17 +1937,6 @@
         }
       }
     },
-    "Translation APIs" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "翻译 API"
-          }
-        }
-      }
-    },
     "Translation returned empty result" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2052,17 +1959,6 @@
         }
       }
     },
-    "Unified API for 200+ models, requires API Key" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "统一 API，支持 200+ 模型，需要配置 API Key"
-          }
-        }
-      }
-    },
     "Unknown" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2070,17 +1966,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未知"
-          }
-        }
-      }
-    },
-    "Unknown DeepLX error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未知 DeepLX 错误"
           }
         }
       }
@@ -2149,52 +2034,12 @@
         }
       }
     },
-    "Uses Bing Translator, may be rate-limited." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 Bing 翻译，可能会受到速率限制。"
-          }
-        }
-      }
-    },
-    "Uses DeepL official API (`/v2`). Requires `authKey` configured on the DeepLX server." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 DeepL 官方 API（`/v2`）。需要在 DeepLX 服务器上配置 `authKey`。"
-          }
-        }
-      }
-    },
-    "Uses DeepL Pro session. Requires `dl_session` cookie configured on the DeepLX server." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用 DeepL Pro 会话。需要在 DeepLX 服务器上配置 `dl_session` Cookie。"
-          }
-        }
-      }
-    },
     "Uses unofficial Google Translate API, may be rate-limited." : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用非官方的 Google 翻译 API，可能会受到速率限制。"
-          }
-        }
-      }
-    },
-    "Uses Youdao Translate, may be rate-limited." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用有道翻译，可能会受到速率限制。"
           }
         }
       }

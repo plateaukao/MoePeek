@@ -168,7 +168,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// V3: Remove provider IDs that no longer exist; fall back to default if none remain.
     private func migrateV3RemovedProviders() {
-        let removedIDs: Set<String> = ["groq", "github-models"]
+        let removedIDs: Set<String> = ["groq", "github-models", "bing", "youdao", "deepl", "deeplx", "baidu", "niutrans", "caiyun", "deepseek", "zhipu", "openrouter", "anthropic"]
         var enabled = Defaults[.enabledProviders]
         let needsMigration = !enabled.isDisjoint(with: removedIDs)
         if needsMigration {
