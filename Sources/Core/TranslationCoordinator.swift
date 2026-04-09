@@ -67,22 +67,6 @@ final class TranslationCoordinator {
         translate(text)
     }
 
-    /// Triggered by OCR shortcut: screen capture → OCR → translate.
-    func ocrAndTranslate() async {
-        phase = .grabbing
-
-        do {
-            let text = try await ScreenCaptureOCR.captureAndRecognize()
-            translate(text)
-        } catch is OCRError {
-            phase = .idle
-        } catch {
-            phase = .active
-            sourceText = ""
-            globalError = String(localized: "OCR failed: \(error.localizedDescription)")
-        }
-    }
-
     /// Read clipboard text and translate directly.
     func translateClipboard() {
         guard let text = NSPasteboard.general.string(forType: .string),

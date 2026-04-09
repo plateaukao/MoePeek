@@ -207,15 +207,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        KeyboardShortcuts.onKeyUp(for: .ocrScreenshot) { [weak self] in
-            guard let self else { return }
-            Task { @MainActor in
-                await self.coordinator.ocrAndTranslate()
-                if case .idle = self.coordinator.phase { return }
-                self.panelController.showAtCursor()
-            }
-        }
-
         KeyboardShortcuts.onKeyUp(for: .inputTranslation) { [weak self] in
             guard let self else { return }
             Task { @MainActor in

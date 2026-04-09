@@ -35,7 +35,6 @@ struct GeneralSettingsView: View {
         Form {
             Section("Keyboard Shortcuts") {
                 KeyboardShortcuts.Recorder("Selection Translation:", name: .translateSelection)
-                KeyboardShortcuts.Recorder("Screenshot OCR:", name: .ocrScreenshot)
                 KeyboardShortcuts.Recorder("Manual Translation:", name: .inputTranslation)
                 KeyboardShortcuts.Recorder("Clipboard Translation:", name: .clipboardTranslation)
             }

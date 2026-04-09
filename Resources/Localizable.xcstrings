@@ -1153,16 +1153,6 @@
     "MoePeek %@" : {
 
     },
-    "MoePeek is now listed in Screen Recording settings" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MoePeek 现已出现在屏幕录制设置列表中"
-          }
-        }
-      }
-    },
     "MoePeek needs accessibility permission to read your selected text. This is essential for text selection translation." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1170,16 +1160,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "MoePeek 需要辅助功能权限来读取你选中的文本，这是划词翻译的核心功能。"
-          }
-        }
-      }
-    },
-    "MoePeek needs screen recording permission for OCR screenshot translation to recognize text on screen." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MoePeek 需要屏幕录制权限来进行 OCR 截图翻译，识别屏幕上的文字。"
           }
         }
       }
@@ -1303,17 +1283,6 @@
         }
       }
     },
-    "No text was recognized in the captured image" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未在截取的图像中识别到文字"
-          }
-        }
-      }
-    },
     "Not checked" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1332,17 +1301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未检测到"
-          }
-        }
-      }
-    },
-    "OCR failed: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OCR 失败：%@"
           }
         }
       }
@@ -1648,17 +1606,6 @@
         }
       }
     },
-    "Required for OCR screenshot translation" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "用于 OCR 截图翻译"
-          }
-        }
-      }
-    },
     "Required for reading selected text" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1742,60 +1689,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "并行运行多个本地模型需要足够的显存。Ollama 可能会换入换出模型，导致延迟增加。"
-          }
-        }
-      }
-    },
-    "Screen capture was cancelled" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "截图已取消"
-          }
-        }
-      }
-    },
-    "Screen Recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "屏幕录制"
-          }
-        }
-      }
-    },
-    "Screen Recording Permission" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "屏幕录制权限"
-          }
-        }
-      }
-    },
-    "Screenshot OCR" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "截图 OCR"
-          }
-        }
-      }
-    },
-    "Screenshot OCR:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "截图 OCR："
           }
         }
       }

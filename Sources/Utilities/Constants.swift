@@ -62,7 +62,6 @@ enum SettingsTab: String, Defaults.Serializable {
 
 extension KeyboardShortcuts.Name {
     static let translateSelection = Self("translateSelection", default: .init(.d, modifiers: .option))
-    static let ocrScreenshot = Self("ocrScreenshot", default: .init(.s, modifiers: .option))
     static let inputTranslation = Self("inputTranslation", default: .init(.a, modifiers: .option))
     static let clipboardTranslation = Self("clipboardTranslation", default: .init(.v, modifiers: .option))
 }

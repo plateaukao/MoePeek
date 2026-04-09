@@ -31,14 +31,6 @@ struct PermissionRecoveryView: View {
                     isGranted: permissionManager.isAccessibilityGranted,
                     onOpenSettings: { permissionManager.openAccessibilitySettings() }
                 )
-
-                PermissionCardView(
-                    icon: "rectangle.dashed.badge.record",
-                    title: "Screen Recording",
-                    description: "Required for OCR screenshot translation",
-                    isGranted: permissionManager.isScreenRecordingGranted,
-                    onOpenSettings: { permissionManager.openScreenRecordingSettings() }
-                )
             }
             .padding(.horizontal, 24)
 

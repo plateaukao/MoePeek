@@ -7,8 +7,6 @@ let project = Project(
             "INFOPLIST_KEY_LSUIElement": "YES",
             "INFOPLIST_KEY_NSAccessibilityUsageDescription":
                 "MoePeek needs accessibility access to read selected text.",
-            "INFOPLIST_KEY_NSScreenCaptureUsageDescription":
-                "MoePeek needs screen capture for OCR translation.",
             "SWIFT_STRICT_CONCURRENCY": "complete",
         ],
         configurations: [

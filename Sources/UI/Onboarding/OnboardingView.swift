@@ -13,19 +13,18 @@ struct OnboardingView: View {
 
     @Default(.enabledProviders) private var enabledProviders
     @State private var currentPageIndex = 0
-    @State private var hasRequestedScreenRecording = false
 
     private var openaiProvider: OpenAICompatibleProvider? {
         registry.providers.first { $0.id == "openai" } as? OpenAICompatibleProvider
     }
 
     private enum Page: Equatable {
-        case welcome, accessibility, screenRecording
+        case welcome, accessibility
         case providerSelection, openaiSetup, appleTranslation
     }
 
     private var pages: [Page] {
-        var result: [Page] = [.welcome, .accessibility, .screenRecording, .providerSelection]
+        var result: [Page] = [.welcome, .accessibility, .providerSelection]
         if enabledProviders.contains("openai"), openaiProvider != nil {
             result.append(.openaiSetup)
         }
@@ -53,8 +52,6 @@ struct OnboardingView: View {
                     welcomeStep
                 case .accessibility:
                     accessibilityStep
-                case .screenRecording:
-                    screenRecordingStep
                 case .providerSelection:
                     providerSelectionStep
                 case .openaiSetup:
@@ -110,13 +107,6 @@ struct OnboardingView: View {
             nextStepButton(
                 title: "Next",
                 isHighlighted: permissionManager.isAccessibilityGranted,
-                action: goNext
-            )
-
-        case .screenRecording:
-            nextStepButton(
-                title: "Next",
-                isHighlighted: permissionManager.isScreenRecordingGranted,
                 action: goNext
             )
 
@@ -198,58 +188,6 @@ struct OnboardingView: View {
             isGranted: permissionManager.isAccessibilityGranted,
             onOpenSettings: { permissionManager.openAccessibilitySettings() }
         )
-    }
-
-    private var screenRecordingStep: some View {
-        VStack(spacing: 16) {
-            Spacer()
-
-            Image(systemName: "rectangle.dashed.badge.record")
-                .font(.system(size: 40))
-                .foregroundStyle(permissionManager.isScreenRecordingGranted ? .green : .secondary)
-
-            Text("Screen Recording Permission")
-                .font(.title2.bold())
-
-            Text("MoePeek needs screen recording permission for OCR screenshot translation to recognize text on screen.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
-
-            if permissionManager.isScreenRecordingGranted {
-                Label("Granted", systemImage: "checkmark.circle.fill")
-                    .font(.headline)
-                    .foregroundStyle(.green)
-                    .transition(.scale.combined(with: .opacity))
-            } else if !hasRequestedScreenRecording {
-                Button("Request Permission") {
-                    hasRequestedScreenRecording = true
-                    permissionManager.requestScreenRecording()
-                }
-                .controlSize(.large)
-                .buttonStyle(.borderedProminent)
-            } else {
-                VStack(spacing: 8) {
-                    Button("Open System Settings") {
-                        permissionManager.openScreenRecordingSettings()
-                    }
-                    .controlSize(.large)
-
-                    Text("MoePeek is now listed in Screen Recording settings")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            Text("Status updates automatically after granting")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-
-            Spacer()
-        }
-        .animation(.easeInOut(duration: 0.3), value: permissionManager.isScreenRecordingGranted)
-        .animation(.easeInOut(duration: 0.3), value: hasRequestedScreenRecording)
     }
 
     // MARK: - Provider Selection Step

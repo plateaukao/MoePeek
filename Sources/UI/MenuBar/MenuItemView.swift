@@ -31,19 +31,6 @@ struct MenuItemView: View {
             guard let coordinator = appDelegate.coordinator,
                   let panelController = appDelegate.panelController else { return }
             Task {
-                await coordinator.ocrAndTranslate()
-                if case .idle = coordinator.phase { return }
-                panelController.showAtCursor()
-            }
-        } label: {
-            Label("Screenshot OCR", systemImage: "text.viewfinder")
-        }
-        .globalKeyboardShortcut(.ocrScreenshot)
-
-        Button {
-            guard let coordinator = appDelegate.coordinator,
-                  let panelController = appDelegate.panelController else { return }
-            Task {
                 await coordinator.translateSelection()
                 panelController.showAtCursor()
             }
