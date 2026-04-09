@@ -9,14 +9,11 @@ import SwiftUI
 final class SettingsWindowController: NSObject, NSWindowDelegate {
     private var window: NSWindow?
     private let registry: TranslationProviderRegistry
-    private let updaterController: UpdaterController?
 
     init(
-        registry: TranslationProviderRegistry,
-        updaterController: UpdaterController?
+        registry: TranslationProviderRegistry
     ) {
         self.registry = registry
-        self.updaterController = updaterController
     }
 
     func showWindow() {
@@ -27,8 +24,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         }
 
         let settingsView = SettingsView(
-            registry: registry,
-            updaterController: updaterController
+            registry: registry
         )
         let hostingView = NSHostingView(rootView: settingsView)
 

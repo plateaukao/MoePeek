@@ -25,8 +25,6 @@ let project = Project(
                 "CFBundleDevelopmentRegion": "en",
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
-                "SUFeedURL": "https://github.com/cosZone/MoePeek/releases/latest/download/appcast.xml",
-                "SUPublicEDKey": "$(SPARKLE_ED_PUBLIC_KEY)",
                 "CFBundleURLTypes": [
                     [
                         "CFBundleURLName": "com.nahida.MoePeek",
@@ -40,7 +38,6 @@ let project = Project(
             dependencies: [
                 .external(name: "KeyboardShortcuts"),
                 .external(name: "Defaults"),
-                .external(name: "Sparkle"),
             ],
             settings: .settings(
                 base: [

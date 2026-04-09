@@ -14,7 +14,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var onboardingController: OnboardingWindowController!
     var selectionMonitor: SelectionMonitor!
     var triggerIconController: TriggerIconController!
-    lazy var updaterController = UpdaterController()
     var settingsController: SettingsWindowController!
 
     func applicationDidFinishLaunching(_: Notification) {
@@ -26,8 +25,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         permissionManager = PermissionManager()
         coordinator = TranslationCoordinator(permissionManager: permissionManager, registry: registry)
         settingsController = SettingsWindowController(
-            registry: registry,
-            updaterController: updaterController
+            registry: registry
         )
         panelController = PopupPanelController(
             coordinator: coordinator,

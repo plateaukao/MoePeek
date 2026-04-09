@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct AboutSettingsView: View {
-    let updaterController: UpdaterController?
-
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
@@ -32,22 +30,6 @@ struct AboutSettingsView: View {
             Text("Licensed under AGPL-3.0")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
-
-            if let updaterController {
-                @Bindable var updater = updaterController
-
-                Divider()
-                    .padding(.horizontal, 40)
-
-                HStack(spacing: 16) {
-                    Button("Check for Updates...") {
-                        updater.checkForUpdates()
-                    }
-                    .disabled(!updater.canCheckForUpdates)
-
-                    Toggle("Automatically check for updates", isOn: $updater.automaticallyChecksForUpdates)
-                }
-            }
 
             Spacer()
 

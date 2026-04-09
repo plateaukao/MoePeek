@@ -3,7 +3,6 @@ import SwiftUI
 
 struct SettingsView: View {
     let registry: TranslationProviderRegistry
-    let updaterController: UpdaterController?
 
     @Default(.selectedSettingsTab) private var selectedTab
 
@@ -43,7 +42,7 @@ struct SettingsView: View {
                 }
                 .tag(SettingsTab.providerOrder)
 
-            AboutSettingsView(updaterController: updaterController)
+            AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")
                 }
