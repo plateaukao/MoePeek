@@ -90,26 +90,28 @@ struct PopupView: View {
                 .padding(.horizontal, contentHorizontalPadding)
                 .padding(.vertical, contentHorizontalPadding)
             } else {
-                // Source input
-                SourceInputView(
-                    text: $editableText,
-                    sourceLanguage: coordinator.detectedLanguage ?? sourceLang,
-                    onSubmit: {
-                        coordinator.translate(editableText)
-                    }
-                )
-                .frame(height: inputHeight)
-                .padding(.horizontal, contentHorizontalPadding)
-                .padding(.top, contentHorizontalPadding)
-                .padding(.bottom, 4)
+                if coordinator.isInputMode {
+                    // Editable source input (manual translation mode)
+                    SourceInputView(
+                        text: $editableText,
+                        sourceLanguage: coordinator.detectedLanguage ?? sourceLang,
+                        onSubmit: {
+                            coordinator.translate(editableText)
+                        }
+                    )
+                    .frame(height: inputHeight)
+                    .padding(.horizontal, contentHorizontalPadding)
+                    .padding(.top, contentHorizontalPadding)
+                    .padding(.bottom, 4)
 
-                DraggableDividerView(
-                    inputHeight: $inputHeight,
-                    minHeight: inputMinHeight,
-                    maxHeight: maxInputHeight,
-                    horizontalPadding: contentHorizontalPadding,
-                    onDragEnd: { Defaults[.popupInputHeight] = Int(inputHeight) }
-                )
+                    DraggableDividerView(
+                        inputHeight: $inputHeight,
+                        minHeight: inputMinHeight,
+                        maxHeight: maxInputHeight,
+                        horizontalPadding: contentHorizontalPadding,
+                        onDragEnd: { Defaults[.popupInputHeight] = Int(inputHeight) }
+                    )
+                }
 
                 // Language bar + settings button
                 HStack(spacing: 4) {

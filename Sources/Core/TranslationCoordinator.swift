@@ -22,6 +22,7 @@ final class TranslationCoordinator {
     }
 
     private(set) var phase: Phase = .idle
+    private(set) var isInputMode: Bool = false
     private(set) var sourceText: String = ""
     private(set) var detectedLanguage: String?
     private(set) var targetLanguage: String = ""
@@ -48,6 +49,7 @@ final class TranslationCoordinator {
 
     /// Triggered by keyboard shortcut: grab selected text → translate.
     func translateSelection() async {
+        isInputMode = false
         guard permissionManager.isAccessibilityGranted else {
             phase = .active
             sourceText = ""
@@ -69,6 +71,7 @@ final class TranslationCoordinator {
 
     /// Read clipboard text and translate directly.
     func translateClipboard() {
+        isInputMode = false
         guard let text = NSPasteboard.general.string(forType: .string),
               !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             phase = .active
@@ -82,6 +85,7 @@ final class TranslationCoordinator {
     /// Reset state and enter input mode (empty source input for manual typing).
     func prepareInputMode() {
         cancelAll()
+        isInputMode = true
         globalError = nil
         sourceText = ""
         detectedLanguage = nil
@@ -169,6 +173,7 @@ final class TranslationCoordinator {
     func dismiss() {
         cancelAll()
         phase = .idle
+        isInputMode = false
         sourceText = ""
         detectedLanguage = nil
         targetLanguage = ""
