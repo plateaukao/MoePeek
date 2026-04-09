@@ -3,8 +3,6 @@ import SwiftUI
 
 struct SettingsView: View {
     let registry: TranslationProviderRegistry
-    let ttsRegistry: TTSProviderRegistry
-    let ttsCoordinator: TTSCoordinator
     let updaterController: UpdaterController?
 
     @Default(.selectedSettingsTab) private var selectedTab
@@ -15,7 +13,6 @@ struct SettingsView: View {
         case .excludedApps: return 480
         case .services: return 580
         case .providerOrder: return 520
-        case .audio: return 520
         case .about: return 420
         }
     }
@@ -45,12 +42,6 @@ struct SettingsView: View {
                     Label("Order", systemImage: "list.number")
                 }
                 .tag(SettingsTab.providerOrder)
-
-            TTSSettingsView(registry: ttsRegistry, translationRegistry: registry, coordinator: ttsCoordinator)
-                .tabItem {
-                    Label("Audio", systemImage: "speaker.wave.2")
-                }
-                .tag(SettingsTab.audio)
 
             AboutSettingsView(updaterController: updaterController)
                 .tabItem {

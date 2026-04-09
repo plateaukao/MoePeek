@@ -276,39 +276,6 @@
         }
       }
     },
-    "Auto-play provider" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自动朗读提供者"
-          }
-        }
-      }
-    },
-    "Auto-play source text" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自动朗读原文"
-          }
-        }
-      }
-    },
-    "Auto-play translation result" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "自动朗读译文"
-          }
-        }
-      }
-    },
     "Automatically check for updates" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -593,16 +560,6 @@
         }
       }
     },
-    "Default Speech Rate" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "默认语速"
-          }
-        }
-      }
-    },
     "Default Width: %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -737,16 +694,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "获取可用模型列表"
-          }
-        }
-      }
-    },
-    "First completed" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "第一个完成的"
           }
         }
       }
@@ -1404,16 +1351,6 @@
         }
       }
     },
-    "Per-Language Rate" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "按语言设置语速"
-          }
-        }
-      }
-    },
     "Permissions Need Re-Authorization" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1468,6 +1405,7 @@
       }
     },
     "Preferences" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1613,17 +1551,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "用于读取选中的文本"
-          }
-        }
-      }
-    },
-    "Reset to default rate" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重置为默认语速"
           }
         }
       }
@@ -1814,6 +1741,7 @@
       }
     },
     "Service" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2018,6 +1946,7 @@
       }
     },
     "Test" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2311,9 +2240,6 @@
           }
         }
       }
-    },
-    "x" : {
-
     },
     "Youdao decryption failed. Please try again." : {
       "extractionState" : "stale",

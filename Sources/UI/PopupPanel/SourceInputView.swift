@@ -9,8 +9,6 @@ struct SourceInputView: View {
     let onSubmit: () -> Void
     @Default(.popupFontSize) private var fontSize
     @Default(.popupFontName) private var fontName
-    @Default(.ttsAccent) private var ttsAccent
-    @Environment(\.ttsCoordinator) private var ttsCoordinator
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -24,31 +22,6 @@ struct SourceInputView: View {
                 .background { InteractiveMarker() }
 
             HStack(spacing: 4) {
-                if let ttsCoordinator {
-                    let speaking = ttsCoordinator.isPlaying(text)
-                    Button {
-                        if speaking {
-                            ttsCoordinator.stop()
-                        } else {
-                            ttsCoordinator.speak(text, language: sourceLanguage)
-                        }
-                    } label: {
-                        Image(systemName: speaking ? "speaker.wave.3.fill" : "speaker.wave.2")
-                            .font(.popup(name: fontName, size: CGFloat(fontSize - 2)))
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-                    .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    .help("Speak source text")
-                    .background { InteractiveMarker() }
-
-                    if sourceLanguage.hasPrefix("en") {
-                        Text(ttsAccent.shortLabel)
-                            .font(.popup(name: fontName, size: CGFloat(fontSize - 4)))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
                 Spacer()
 
                 Text("↵ Translate · ⇧↵ Newline")

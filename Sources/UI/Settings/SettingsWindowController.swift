@@ -9,19 +9,13 @@ import SwiftUI
 final class SettingsWindowController: NSObject, NSWindowDelegate {
     private var window: NSWindow?
     private let registry: TranslationProviderRegistry
-    private let ttsRegistry: TTSProviderRegistry
-    private let ttsCoordinator: TTSCoordinator
     private let updaterController: UpdaterController?
 
     init(
         registry: TranslationProviderRegistry,
-        ttsRegistry: TTSProviderRegistry,
-        ttsCoordinator: TTSCoordinator,
         updaterController: UpdaterController?
     ) {
         self.registry = registry
-        self.ttsRegistry = ttsRegistry
-        self.ttsCoordinator = ttsCoordinator
         self.updaterController = updaterController
     }
 
@@ -34,8 +28,6 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
 
         let settingsView = SettingsView(
             registry: registry,
-            ttsRegistry: ttsRegistry,
-            ttsCoordinator: ttsCoordinator,
             updaterController: updaterController
         )
         let hostingView = NSHostingView(rootView: settingsView)

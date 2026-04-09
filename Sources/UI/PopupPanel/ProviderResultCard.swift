@@ -10,8 +10,6 @@ struct ProviderResultCard: View {
     var onRetry: (() -> Void)?
     @Default(.popupFontSize) private var fontSize
     @Default(.popupFontName) private var fontName
-    @Default(.ttsAccent) private var ttsAccent
-    @Environment(\.ttsCoordinator) private var ttsCoordinator
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -61,10 +59,6 @@ struct ProviderResultCard: View {
             RoundedRectangle(cornerRadius: 6)
                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.5)
         )
-    }
-
-    private func isSpeaking(_ text: String) -> Bool {
-        ttsCoordinator?.isPlaying(text) ?? false
     }
 
     // MARK: - Status Indicator
@@ -125,27 +119,6 @@ struct ProviderResultCard: View {
 
                 HStack {
                     Spacer()
-
-                    if let ttsCoordinator {
-                        Button {
-                            if isSpeaking(text) {
-                                ttsCoordinator.stop()
-                            } else {
-                                ttsCoordinator.speak(text, language: targetLanguage)
-                            }
-                        } label: {
-                            HStack(spacing: 2) {
-                                Image(systemName: isSpeaking(text) ? "speaker.wave.3.fill" : "speaker.wave.2")
-                                if targetLanguage.hasPrefix("en") {
-                                    Text(ttsAccent.shortLabel)
-                                }
-                            }
-                            .font(.popup(name: fontName, size: CGFloat(fontSize - 2)))
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.mini)
-                        .help("Speak")
-                    }
 
                     Button {
                         NSPasteboard.general.clearContents()

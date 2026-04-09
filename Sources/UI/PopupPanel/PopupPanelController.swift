@@ -11,7 +11,6 @@ final class PopupPanelController {
     private var dismissMonitor: PopupDismissMonitor?
 
     private let coordinator: TranslationCoordinator
-    private let ttsCoordinator: TTSCoordinator?
     private let settingsController: SettingsWindowController?
 
     /// The app that was frontmost before we activated ourselves for input mode.
@@ -19,11 +18,9 @@ final class PopupPanelController {
 
     init(
         coordinator: TranslationCoordinator,
-        ttsCoordinator: TTSCoordinator? = nil,
         settingsController: SettingsWindowController? = nil
     ) {
         self.coordinator = coordinator
-        self.ttsCoordinator = ttsCoordinator
         self.settingsController = settingsController
     }
 
@@ -77,7 +74,6 @@ final class PopupPanelController {
     func dismiss() {
         dismissMonitor?.stop()
         dismissMonitor = nil
-        ttsCoordinator?.stop()
         panel?.contentView = nil
         panel?.close()
         // Recreate panel on next show to ensure a fresh SwiftUI view tree,
@@ -116,7 +112,6 @@ final class PopupPanelController {
                 }
             )
             .environment(\.popupPanel, newPanel)
-            .environment(\.ttsCoordinator, ttsCoordinator)
             let hostingView = NSHostingView(rootView: contentView)
             // Prevent NSHostingView from auto-resizing the window on content changes,
             // which causes an infinite constraint update loop during streaming.
