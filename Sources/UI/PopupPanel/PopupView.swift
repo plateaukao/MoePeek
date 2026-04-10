@@ -7,18 +7,17 @@ struct PopupView: View {
     var onOpenSettings: (() -> Void)?
     @State private var editableText: String = ""
     @State private var expandedProviders: Set<String> = []
-    @State private var sourceLang: String = Defaults[.sourceLanguage]
     @State private var targetLang: String = Defaults[.targetLanguage]
     @State private var inputHeight: CGFloat = CGFloat(Defaults[.popupInputHeight])
-    @State private var containerHeight: CGFloat = CGFloat(Defaults[.popupDefaultHeight])
     @Default(.popupFontSize) private var fontSize
+    @Environment(\.popupPanel) private var panel
 
     private let inputMinHeight: CGFloat = 36
     private let contentHorizontalPadding: CGFloat = 14
 
     private var maxInputHeight: CGFloat {
-        // Reserve 120pt for language bar + results; floor ensures drag range above inputMinHeight
-        max(containerHeight - 120, inputMinHeight + 24)
+        let panelHeight = panel?.frame.height ?? 200
+        return max(panelHeight - 120, inputMinHeight + 24)
     }
 
     var body: some View {
@@ -42,18 +41,6 @@ struct PopupView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            GeometryReader { geo in
-                Color.clear
-                    .onAppear { containerHeight = geo.size.height }
-                    .onChange(of: geo.size.height) { _, h in containerHeight = h }
-            }
-        )
-        .onChange(of: containerHeight) { _, _ in
-            let clamped = min(inputHeight, maxInputHeight)
-            guard clamped != inputHeight else { return }
-            inputHeight = clamped
-        }
         .overlay(alignment: .bottomTrailing) {
             ResizeGripView()
         }
@@ -67,7 +54,6 @@ struct PopupView: View {
         }
         .onAppear {
             editableText = coordinator.sourceText
-            sourceLang = Defaults[.sourceLanguage]
             targetLang = coordinator.targetLanguage
             expandedProviders = Set(coordinator.activeSlots.map(\.id))
         }
@@ -94,7 +80,7 @@ struct PopupView: View {
                     // Editable source input (manual translation mode)
                     SourceInputView(
                         text: $editableText,
-                        sourceLanguage: coordinator.detectedLanguage ?? sourceLang,
+                        sourceLanguage: coordinator.detectedLanguage ?? "auto",
                         onSubmit: {
                             coordinator.translate(editableText)
                         }
@@ -115,22 +101,9 @@ struct PopupView: View {
 
                 // Language bar + settings button
                 HStack(spacing: 4) {
-                    LanguageBarView(
-                        sourceLanguage: $sourceLang,
-                        detectedLanguage: coordinator.detectedLanguage,
-                        detectionConfidence: coordinator.detectionResult?.confidence,
-                        targetLanguage: $targetLang,
-                        onSwap: {
-                            let effectiveSource = sourceLang == "auto"
-                                ? (coordinator.detectedLanguage ?? targetLang)
-                                : sourceLang
-                            // When auto-detect has no result yet, effectiveSource falls back
-                            // to targetLang and swap becomes a no-op
-                            guard effectiveSource != targetLang else { return }
-                            sourceLang = targetLang
-                            targetLang = effectiveSource
-                        }
-                    )
+                    LanguageBarView(targetLanguage: $targetLang)
+
+                    Spacer()
 
                     Button {
                         onOpenSettings?()
@@ -149,12 +122,6 @@ struct PopupView: View {
                     Defaults[.targetLanguage] = newValue
                     // Skip retranslation when this change came from coordinator sync
                     guard newValue != coordinator.targetLanguage else { return }
-                    if !editableText.isEmpty {
-                        coordinator.translate(editableText)
-                    }
-                }
-                .onChange(of: sourceLang) { _, newValue in
-                    Defaults[.sourceLanguage] = newValue
                     if !editableText.isEmpty {
                         coordinator.translate(editableText)
                     }
@@ -182,6 +149,34 @@ struct PopupView: View {
                     }
                     .padding(.horizontal, contentHorizontalPadding)
                     .padding(.vertical, 6)
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear.preference(key: ResultsContentHeightKey.self, value: geo.size.height)
+                        }
+                    )
+                }
+                .onPreferenceChange(ResultsContentHeightKey.self) { height in
+                    autoResizePanel(resultsContentHeight: height)
+                }
+
+                // Bottom bar with copy button
+                if let text = firstCompletedText {
+                    HStack {
+                        Spacer()
+                        Button {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(text, forType: .string)
+                        } label: {
+                            Image(systemName: "doc.on.doc")
+                                .font(.system(size: CGFloat(fontSize - 2)))
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Copy")
+                        .background { InteractiveMarker() }
+                    }
+                    .padding(.horizontal, contentHorizontalPadding)
+                    .padding(.top, 4)
                 }
             }
         }
@@ -189,6 +184,37 @@ struct PopupView: View {
     }
 
     // MARK: - Helpers
+
+    /// The text from the first completed provider, used for the copy button.
+    private var firstCompletedText: String? {
+        for provider in coordinator.activeSlots {
+            if case let .completed(text) = coordinator.providerStates[provider.id] {
+                return text
+            }
+        }
+        return nil
+    }
+
+    private func autoResizePanel(resultsContentHeight: CGFloat) {
+        guard let panel else { return }
+        // Estimate chrome: language bar + paddings + divider + bottom padding
+        let chromeHeight: CGFloat = coordinator.isInputMode ? (inputHeight + 70) : 60
+        let idealHeight = chromeHeight + resultsContentHeight
+        let targetHeight = min(max(idealHeight, panel.minSize.height), panel.maxSize.height)
+
+        let currentFrame = panel.frame
+        guard targetHeight > currentFrame.height + 2 else { return }
+
+        // Anchor top edge (maxY in screen coords), grow downward
+        var newY = currentFrame.maxY - targetHeight
+        if let screen = panel.screen ?? NSScreen.main {
+            newY = max(newY, screen.visibleFrame.minY)
+        }
+        panel.setFrame(
+            NSRect(x: currentFrame.origin.x, y: newY, width: currentFrame.width, height: targetHeight),
+            display: true
+        )
+    }
 
     private func expandedBinding(for id: String) -> Binding<Bool> {
         Binding(
@@ -203,6 +229,15 @@ struct PopupView: View {
         )
     }
 
+}
+
+// MARK: - Preference Keys
+
+private struct ResultsContentHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
 }
 
 // MARK: - Resize Grip

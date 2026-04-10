@@ -33,7 +33,7 @@ final class PopupPanel: NSPanel {
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
         isReleasedWhenClosed = false
-        minSize = CGSize(width: 280, height: 200)
+        minSize = CGSize(width: 280, height: 80)
         maxSize = CGSize(width: 800, height: 800)
 
         // Rounded corners

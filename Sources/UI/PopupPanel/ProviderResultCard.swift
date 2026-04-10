@@ -110,28 +110,12 @@ struct ProviderResultCard: View {
             }
             .background { InteractiveMarker() }
         case let .completed(text):
-            VStack(alignment: .leading, spacing: 4) {
-                Text(text)
-                    .font(.popup(name: fontName, size: CGFloat(fontSize)))
-                    .foregroundStyle(.primary)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                HStack {
-                    Spacer()
-
-                    Button {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(text, forType: .string)
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                            .font(.popup(name: fontName, size: CGFloat(fontSize - 2)))
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.mini)
-                }
-            }
-            .background { InteractiveMarker() }
+            Text(text)
+                .font(.popup(name: fontName, size: CGFloat(fontSize)))
+                .foregroundStyle(.primary)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background { InteractiveMarker() }
         case let .error(message):
             VStack(alignment: .leading, spacing: 4) {
                 Label(message, systemImage: "exclamationmark.triangle")

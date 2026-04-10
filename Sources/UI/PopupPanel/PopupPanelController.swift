@@ -99,7 +99,7 @@ final class PopupPanelController {
     private func setupPanel() -> CGSize {
         let initialSize = CGSize(
             width: CGFloat(Defaults[.popupDefaultWidth]),
-            height: CGFloat(Defaults[.popupDefaultHeight])
+            height: 150
         )
 
         if panel == nil {
