@@ -35,6 +35,8 @@ final class TranslationCoordinator {
     /// Monotonically increasing counter; increments each time `translate()` is called.
     /// Used by PopupView to reset `expandedProviders` for subsequent translations.
     private(set) var translationGeneration: Int = 0
+    /// The currently running user-defined action, or nil when doing a regular translation.
+    private(set) var currentAction: UserDefinedAction?
 
     let registry: TranslationProviderRegistry
     private let permissionManager: PermissionManager
@@ -93,6 +95,7 @@ final class TranslationCoordinator {
         providerStates = [:]
         detectionResult = nil
         activeSlots = []
+        currentAction = nil
         phase = .active
     }
 
@@ -109,6 +112,7 @@ final class TranslationCoordinator {
 
         cancelAll()
         globalError = nil
+        currentAction = nil
 
         sourceText = trimmed
 
@@ -164,10 +168,57 @@ final class TranslationCoordinator {
         let text = sourceText
         let target = targetLanguage
         let source = detectedLanguage
+        let action = currentAction
         let task = Task {
-            await runProvider(provider, text: text, from: source, to: target)
+            if let action {
+                await runActionForProvider(provider, text: text, action: action, targetLang: target)
+            } else {
+                await runProvider(provider, text: text, from: source, to: target)
+            }
         }
         activeTasks[provider.id] = task
+    }
+
+    /// Execute a user-defined action on the given text using all enabled LLM-capable providers.
+    func runAction(_ text: String, action: UserDefinedAction) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            phase = .active
+            sourceText = ""
+            globalError = String(localized: "Empty text")
+            return
+        }
+
+        cancelAll()
+        globalError = nil
+        currentAction = action
+        isInputMode = false
+        sourceText = trimmed
+        detectedLanguage = nil
+        detectionResult = nil
+        // Keep the user's preferred target language available for {targetLang} substitution.
+        targetLanguage = Defaults[.targetLanguage]
+        phase = .active
+
+        let providers = registry.enabledSlots.filter { $0.supportsCustomActions }
+        activeSlots = providers
+        translationGeneration += 1
+        guard !providers.isEmpty else {
+            globalError = String(localized: "No LLM providers enabled. Enable OpenAI, Ollama, or LM Studio in Settings to run actions.")
+            return
+        }
+
+        providerStates = [:]
+        for provider in providers {
+            providerStates[provider.id] = .waiting
+        }
+
+        for provider in providers {
+            let task = Task {
+                await runActionForProvider(provider, text: trimmed, action: action, targetLang: targetLanguage)
+            }
+            activeTasks[provider.id] = task
+        }
     }
 
     func dismiss() {
@@ -181,6 +232,7 @@ final class TranslationCoordinator {
         globalError = nil
         detectionResult = nil
         activeSlots = []
+        currentAction = nil
     }
 
     // MARK: - Computed Helpers
@@ -233,6 +285,45 @@ final class TranslationCoordinator {
 
             if accumulated.isEmpty {
                 providerStates[provider.id] = .error(message: String(localized: "Translation returned empty result"))
+            } else {
+                providerStates[provider.id] = .completed(text: accumulated)
+            }
+        } catch {
+            guard !Task.isCancelled else { return }
+            providerStates[provider.id] = .error(message: error.localizedDescription)
+        }
+    }
+
+    private func runActionForProvider(
+        _ provider: any TranslationProvider,
+        text: String,
+        action: UserDefinedAction,
+        targetLang: String
+    ) async {
+        defer {
+            if !Task.isCancelled {
+                activeTasks.removeValue(forKey: provider.id)
+            }
+        }
+        providerStates[provider.id] = .translating
+
+        do {
+            var accumulated = ""
+            let stream = provider.runCustomAction(
+                text: text,
+                systemPrompt: action.prompt,
+                targetLanguage: targetLang
+            )
+            for try await chunk in stream {
+                guard !Task.isCancelled else { return }
+                accumulated += chunk
+                providerStates[provider.id] = .streaming(partial: accumulated)
+            }
+
+            guard !Task.isCancelled else { return }
+
+            if accumulated.isEmpty {
+                providerStates[provider.id] = .error(message: String(localized: "Action returned empty result"))
             } else {
                 providerStates[provider.id] = .completed(text: accumulated)
             }

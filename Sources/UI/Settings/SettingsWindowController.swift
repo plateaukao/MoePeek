@@ -29,14 +29,14 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let hostingView = NSHostingView(rootView: settingsView)
 
         let window = NSWindow(
-            contentRect: NSRect(origin: .zero, size: NSSize(width: 720, height: 680)),
+            contentRect: NSRect(origin: .zero, size: NSSize(width: 820, height: 680)),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
         )
         window.title = "MoePeek \(String(localized: "Settings"))"
         window.contentView = hostingView
-        window.contentMinSize = NSSize(width: 720, height: 420)
+        window.contentMinSize = NSSize(width: 820, height: 420)
         window.center()
         window.isReleasedWhenClosed = false
         window.delegate = self

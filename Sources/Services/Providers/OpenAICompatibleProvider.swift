@@ -92,16 +92,49 @@ struct OpenAICompatibleProvider: ParallelModelProvider {
         translateStream(text, from: sourceLang, to: targetLang, model: Defaults[modelKey])
     }
 
+    var supportsCustomActions: Bool { true }
+
     func translateStream(
         _ text: String,
         from sourceLang: String?,
         to targetLang: String,
         model: String
     ) -> AsyncThrowingStream<String, Error> {
+        let promptTemplate = Defaults[systemPromptKey]
+        let systemPrompt = promptTemplate.replacingOccurrences(of: "{targetLang}", with: targetLang)
+        return streamChatCompletion(text: text, systemPrompt: systemPrompt, model: model)
+    }
+
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String
+    ) -> AsyncThrowingStream<String, Error> {
+        runCustomAction(text: text, systemPrompt: systemPrompt, targetLanguage: targetLanguage, model: Defaults[modelKey])
+    }
+
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String,
+        model: String
+    ) -> AsyncThrowingStream<String, Error> {
+        let resolved = Self.resolveCustomAction(prompt: systemPrompt, text: text, targetLanguage: targetLanguage)
+        return streamChatCompletion(text: resolved.userMessage, systemPrompt: resolved.systemPrompt, model: model)
+    }
+
+    @MainActor
+    func makeSettingsView() -> AnyView {
+        AnyView(OpenAICompatibleSettingsView(provider: self))
+    }
+
+    // MARK: - Private
+
+    private func streamChatCompletion(text: String, systemPrompt: String, model: String) -> AsyncThrowingStream<String, Error> {
         AsyncThrowingStream { continuation in
             let task = Task {
                 do {
-                    let request = try buildRequest(text: text, sourceLang: sourceLang, targetLang: targetLang, model: model)
+                    let request = try buildRequest(text: text, systemPrompt: systemPrompt, model: model)
                     let (bytes, response) = try await translationURLSession.bytes(for: request)
                     try await streamOpenAISSE(bytes, response: response, to: continuation)
                     continuation.finish()
@@ -113,14 +146,7 @@ struct OpenAICompatibleProvider: ParallelModelProvider {
         }
     }
 
-    @MainActor
-    func makeSettingsView() -> AnyView {
-        AnyView(OpenAICompatibleSettingsView(provider: self))
-    }
-
-    // MARK: - Private
-
-    private func buildRequest(text: String, sourceLang: String?, targetLang: String, model: String) throws -> URLRequest {
+    private func buildRequest(text: String, systemPrompt: String, model: String) throws -> URLRequest {
         let baseURL = Defaults[baseURLKey].trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         guard let url = URL(string: "\(baseURL)/chat/completions") else {
             throw TranslationError.invalidURL
@@ -130,16 +156,16 @@ struct OpenAICompatibleProvider: ParallelModelProvider {
             throw TranslationError.missingAPIKey
         }
 
-        let promptTemplate = Defaults[systemPromptKey]
-        let systemPrompt = promptTemplate.replacingOccurrences(of: "{targetLang}", with: targetLang)
+        var messages: [[String: String]] = []
+        if !systemPrompt.isEmpty {
+            messages.append(["role": "system", "content": systemPrompt])
+        }
+        messages.append(["role": "user", "content": text])
 
         let body: [String: Any] = [
             "model": model,
             "stream": true,
-            "messages": [
-                ["role": "system", "content": systemPrompt],
-                ["role": "user", "content": text],
-            ],
+            "messages": messages,
         ]
 
         var request = URLRequest(url: url)

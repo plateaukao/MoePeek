@@ -51,10 +51,27 @@ enum TextDetectionMode: String, CaseIterable, Defaults.Serializable {
 
 enum SettingsTab: String, Defaults.Serializable {
     case general
+    case actions
     case excludedApps
     case services
     case providerOrder
     case about
+}
+
+// MARK: - User-Defined Action
+
+/// A named prompt the user can run on selected text from the trigger icon bar.
+/// Output is streamed through the same LLM providers used for translation.
+struct UserDefinedAction: Codable, Hashable, Identifiable, Defaults.Serializable {
+    let id: String
+    var name: String
+    var prompt: String
+
+    init(id: String = "action_\(UUID().uuidString.lowercased())", name: String, prompt: String) {
+        self.id = id
+        self.name = name
+        self.prompt = prompt
+    }
 }
 
 // MARK: - Keyboard Shortcuts
@@ -106,6 +123,9 @@ extension Defaults.Keys {
 
     // Custom providers
     static let customProviders = Key<[CustomProviderDefinition]>("customProviders", default: [])
+
+    // User-defined actions (custom prompts runnable from the trigger icon bar)
+    static let userDefinedActions = Key<[UserDefinedAction]>("userDefinedActions", default: [])
 
     // App language override
     static let appLanguage = Key<AppLanguage>("appLanguage", default: .system)

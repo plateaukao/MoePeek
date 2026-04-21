@@ -58,6 +58,28 @@ protocol TranslationProvider: Sendable {
         model: String
     ) -> AsyncThrowingStream<String, Error>
 
+    /// Whether this provider can execute arbitrary user-defined action prompts.
+    /// LLM providers return true; rule-based translators (Apple, Google) return false.
+    var supportsCustomActions: Bool { get }
+
+    /// Stream the response to a user-defined action prompt. The provider uses
+    /// `systemPrompt` as the system message and `text` as the user message.
+    /// `targetLanguage` is substituted into `{targetLang}` placeholders if present.
+    /// Uses the provider's configured default model.
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String
+    ) -> AsyncThrowingStream<String, Error>
+
+    /// Stream a custom action using a specific model override.
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String,
+        model: String
+    ) -> AsyncThrowingStream<String, Error>
+
     /// Return a settings view for this provider.
     @MainActor func makeSettingsView() -> AnyView
 }
@@ -92,6 +114,7 @@ extension TranslationProvider {
     var isDeletable: Bool { false }
     var activeModels: [String] { [] }
     var iconAssetName: String? { nil }
+    var supportsCustomActions: Bool { false }
 
     func translateStream(
         _ text: String,
@@ -100,6 +123,43 @@ extension TranslationProvider {
         model: String
     ) -> AsyncThrowingStream<String, Error> {
         translateStream(text, from: sourceLang, to: targetLang)
+    }
+
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String
+    ) -> AsyncThrowingStream<String, Error> {
+        AsyncThrowingStream { continuation in
+            continuation.finish(throwing: TranslationError.customActionUnsupported(providerName: displayName))
+        }
+    }
+
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String,
+        model: String
+    ) -> AsyncThrowingStream<String, Error> {
+        runCustomAction(text: text, systemPrompt: systemPrompt, targetLanguage: targetLanguage)
+    }
+
+    /// Resolve a user-defined action prompt into (systemPrompt, userMessage):
+    /// - `{targetLang}` is substituted with the target language.
+    /// - If `{{content}}` is present, it is substituted with the selected text and
+    ///   the resolved string becomes the sole user message (no system prompt).
+    /// - Otherwise, the prompt is the system message and the text is the user message.
+    static func resolveCustomAction(
+        prompt: String,
+        text: String,
+        targetLanguage: String
+    ) -> (systemPrompt: String, userMessage: String) {
+        let withLang = prompt.replacingOccurrences(of: "{targetLang}", with: targetLanguage)
+        if withLang.contains("{{content}}") {
+            let withContent = withLang.replacingOccurrences(of: "{{content}}", with: text)
+            return (systemPrompt: "", userMessage: withContent)
+        }
+        return (systemPrompt: withLang, userMessage: text)
     }
 }
 
@@ -128,6 +188,16 @@ struct ModelSlotProvider: TranslationProvider {
         to targetLang: String
     ) -> AsyncThrowingStream<String, Error> {
         inner.translateStream(text, from: sourceLang, to: targetLang, model: modelOverride)
+    }
+
+    var supportsCustomActions: Bool { inner.supportsCustomActions }
+
+    func runCustomAction(
+        text: String,
+        systemPrompt: String,
+        targetLanguage: String
+    ) -> AsyncThrowingStream<String, Error> {
+        inner.runCustomAction(text: text, systemPrompt: systemPrompt, targetLanguage: targetLanguage, model: modelOverride)
     }
 
     @MainActor func makeSettingsView() -> AnyView { inner.makeSettingsView() }
@@ -233,6 +303,7 @@ enum TranslationError: LocalizedError {
     case languageNotInstalled(source: String?, target: String)
     case languageUnsupported(source: String?, target: String)
     case translationSessionFailed
+    case customActionUnsupported(providerName: String)
 
     var errorDescription: String? {
         switch self {
@@ -249,6 +320,8 @@ enum TranslationError: LocalizedError {
             return String(localized: "Language pair not supported (\(source) → \(tgt)). Try another provider.")
         case .translationSessionFailed:
             return String(localized: "Translation session ended unexpectedly. Please try again.")
+        case let .customActionUnsupported(providerName):
+            return String(localized: "\(providerName) does not support custom actions.")
         }
     }
 }

@@ -9,6 +9,7 @@ struct SettingsView: View {
     private var tabHeight: CGFloat {
         switch selectedTab {
         case .general: return 680
+        case .actions: return 560
         case .excludedApps: return 480
         case .services: return 580
         case .providerOrder: return 520
@@ -23,6 +24,12 @@ struct SettingsView: View {
                     Label("General", systemImage: "gear")
                 }
                 .tag(SettingsTab.general)
+
+            ActionsSettingsView()
+                .tabItem {
+                    Label("Actions", systemImage: "sparkles")
+                }
+                .tag(SettingsTab.actions)
 
             ExcludedAppsSettingsView()
                 .tabItem {
@@ -48,6 +55,6 @@ struct SettingsView: View {
                 }
                 .tag(SettingsTab.about)
         }
-        .frame(minWidth: 720, idealWidth: 720, minHeight: tabHeight, idealHeight: tabHeight)
+        .frame(minWidth: 820, idealWidth: 820, minHeight: tabHeight, idealHeight: tabHeight)
     }
 }

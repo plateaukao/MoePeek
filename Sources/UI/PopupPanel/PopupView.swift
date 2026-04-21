@@ -99,9 +99,15 @@ struct PopupView: View {
                     )
                 }
 
-                // Language bar + settings button
+                // Top bar: language picker for translation, action label for actions
                 HStack(spacing: 4) {
-                    LanguageBarView(targetLanguage: $targetLang)
+                    if let action = coordinator.currentAction {
+                        Label(action.name, systemImage: "sparkles")
+                            .font(.system(size: CGFloat(fontSize - 1), weight: .medium))
+                            .foregroundStyle(.secondary)
+                    } else {
+                        LanguageBarView(targetLanguage: $targetLang)
+                    }
 
                     Spacer()
 
@@ -120,7 +126,9 @@ struct PopupView: View {
                 .padding(.vertical, 4)
                 .onChange(of: targetLang) { _, newValue in
                     Defaults[.targetLanguage] = newValue
-                    // Skip retranslation when this change came from coordinator sync
+                    // Skip retranslation when this change came from coordinator sync,
+                    // or when we're in action mode (the picker isn't even shown).
+                    guard coordinator.currentAction == nil else { return }
                     guard newValue != coordinator.targetLanguage else { return }
                     if !editableText.isEmpty {
                         coordinator.translate(editableText)

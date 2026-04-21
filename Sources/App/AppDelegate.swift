@@ -239,6 +239,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
+        triggerIconController.onActionRequested = { [weak self] text, action in
+            guard let self else { return }
+            Task { @MainActor in
+                self.coordinator.runAction(text, action: action)
+                if case .idle = self.coordinator.phase { return }
+                self.panelController.showAtCursor()
+            }
+        }
+
         triggerIconController.onDismissed = { [weak self] in
             self?.selectionMonitor.suppressBriefly()
         }
